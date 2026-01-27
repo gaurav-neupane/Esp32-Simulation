@@ -4,11 +4,11 @@ import UploadModal from "./components/UploadModal"
 
 function App() {
   const [open, setOpen] = useState<boolean>(false)
-  const [image, setImage] = useState<string | null>(null);
+  const [image, setImage] = useState<File | null>(null);
   const [bootText, setBootText] = useState<string>("000000xxxxxxx0000x");
 
-  const handleImageUpload = async (img: string) => {
-  setImage(img);
+  const handleImageUpload = async (file: File) => {
+  setImage(file);
 
   const bootMessages = [
     "Initializing...",
@@ -33,13 +33,17 @@ function App() {
       }
     }, 600); // speed of boot messages
   });
+    
+    
+  const formData = new FormData();
+  formData.append("image", file);
 
   // --- After boot finishes, call backend ---
   try {
     const response = await fetch("http://localhost:5000/process", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ image: img }),
+      body: formData,
     });
 
     const data = await response.json();

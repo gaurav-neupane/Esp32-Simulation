@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 
 interface UploadModalProps {
   onClose: () => void;
-  onImageSelect: (image: string) => void; // send the image back to App.tsx
+  onImageSelect: (file: File) => void; // send the image back to App.tsx
 }
 
 const UploadModal: React.FC<UploadModalProps> = ({ onClose, onImageSelect }) => {
@@ -12,26 +12,19 @@ const UploadModal: React.FC<UploadModalProps> = ({ onClose, onImageSelect }) => 
   // FILE UPLOAD
   // -----------------------------
   const openFilePicker = () => {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = "image/*";
+  const input = document.createElement("input");
+  input.type = "file";
+  input.accept = "image/*";
 
-    input.onchange = () => {
-      const file = input.files?.[0];
-      if (!file) return;
+  input.onchange = () => {
+    const file = input.files?.[0];
+    if (file) {
+      onImageSelect(file); // <-- send FILE, not base64
+      onClose();
+    }
+  };
 
-      const reader = new FileReader();
-      reader.onload = () => {
-        const imageURL = reader.result?.toString();
-        if (imageURL) {
-          onImageSelect(imageURL); // send image to App.tsx
-          onClose(); // close modal
-        }
-      };
-      reader.readAsDataURL(file);
-    };
-
-    input.click();
+  input.click();
   };
 
   // -----------------------------
@@ -56,24 +49,7 @@ const UploadModal: React.FC<UploadModalProps> = ({ onClose, onImageSelect }) => 
 
   // -----------------------------
   // CAPTURE FROM CAMERA
-  // -----------------------------
-  const captureImage = () => {
-    if (!videoRef.current) return;
-
-    const canvas = document.createElement("canvas");
-    canvas.width = videoRef.current.videoWidth;
-    canvas.height = videoRef.current.videoHeight;
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    ctx.drawImage(videoRef.current, 0, 0);
-
-    const image = canvas.toDataURL("image/png");
-
-    onImageSelect(image); // send to parent
-    onClose(); // close modal
-  };
+  // ----------------------------
 
   return (
     <div
@@ -92,12 +68,6 @@ const UploadModal: React.FC<UploadModalProps> = ({ onClose, onImageSelect }) => 
         <video ref={videoRef} autoPlay playsInline className="w-full rounded-lg mb-4" />
 
         <div className="flex flex-col gap-3">
-          <button
-            onClick={captureImage}
-            className="bg-green-500 text-white py-2 rounded-lg hover:bg-green-600"
-          >
-            Capture From Camera
-          </button>
 
           <button
             onClick={openFilePicker}
