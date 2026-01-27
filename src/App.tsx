@@ -5,14 +5,13 @@ import UploadModal from "./components/UploadModal"
 function App() {
   const [open, setOpen] = useState<boolean>(false)
   const [image, setImage] = useState<File | null>(null);
-  const [bootText, setBootText] = useState<string>("000000xxxxxxx0000x");
+  const [bootText, setBootText] = useState<string>("BOOT UP");
 
   const handleImageUpload = async (file: File) => {
   setImage(file);
 
   const bootMessages = [
     "Initializing...",
-    "Connecting to sensors...",
     "Loading firmware...",
     "Preparing image data...",
     "Processing image..."
@@ -31,18 +30,17 @@ function App() {
         clearInterval(interval);
         resolve(); // continue after boot finishes
       }
-    }, 600); // speed of boot messages
+    }, 1500); // speed of boot messages
   });
     
     
   const formData = new FormData();
-  formData.append("image", file);
+  formData.append("file", file);
 
   // --- After boot finishes, call backend ---
   try {
     const response = await fetch("http://localhost:5000/process", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
       body: formData,
     });
 
@@ -56,17 +54,20 @@ function App() {
 };
 
   return (
-    <div className="flex justify-center items-center relative h-screen max-h-screen bg-[#333333]">
-      <button className="    absolute left-19 top-69 h-15 w-15 z-10 rounded-4xl 
-    bg-red-800 text-white 
+    <div className="flex flex-col justify-center items-center gap-10 h-screen max-h-screen bg-[#333333]">
+      <h1 className="text-4xl text-white font-serif">Esp32 Simulation</h1>
+      {open && <UploadModal onClose={() => setOpen(false)} onImageSelect={(img) =>  handleImageUpload(img)} />}
+      <div className="relative">
+         <button className="    absolute left-[5.6%] top-[38.5%] aspect-square w-[5%] z-10 rounded-4xl
+    bg-red-800 text-white text-[1.3vw]
     shadow-lg 
     active:scale-90 active:shadow-md active:bg-red-500 
     transition-all"
       onClick={()=>setOpen(true)}
-      >Push</button>
-      <div className={`absolute h-48 top-53 left-166 w-138 z-20 p-8 font-mono text-lg rounded-md transition-all duration-300 ${image?"bg-green-400":"bg-green-800"}`}>{bootText}</div>
-      {open && <UploadModal onClose={() => setOpen(false)} onImageSelect={(img) =>  handleImageUpload(img)} />}
-      <img src={Esp32} />
+        >Push</button>
+          <div className={`absolute top-[26%] left-[52%] w-[44%] h-[38%] z-20 p-[2%] font-mono text-[2vw] rounded-md transition-all duration-300 ${image?"bg-green-400":"bg-green-800"}`}>{bootText}</div>
+        <img src={Esp32}/>
+      </div>
     </div>
   )
 }

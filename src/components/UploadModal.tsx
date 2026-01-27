@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+
 
 interface UploadModalProps {
   onClose: () => void;
@@ -6,7 +6,7 @@ interface UploadModalProps {
 }
 
 const UploadModal: React.FC<UploadModalProps> = ({ onClose, onImageSelect }) => {
-  const videoRef = useRef<HTMLVideoElement>(null);
+
 
   // -----------------------------
   // FILE UPLOAD
@@ -27,29 +27,6 @@ const UploadModal: React.FC<UploadModalProps> = ({ onClose, onImageSelect }) => 
   input.click();
   };
 
-  // -----------------------------
-  // CAMERA START
-  // -----------------------------
-  const startCamera = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-      if (videoRef.current) videoRef.current.srcObject = stream;
-    } catch {
-      alert("Camera access denied");
-    }
-  };
-
-  useEffect(() => {
-    startCamera();
-    return () => {
-      const stream = videoRef.current?.srcObject as MediaStream;
-      stream?.getTracks().forEach((track) => track.stop());
-    };
-  }, []);
-
-  // -----------------------------
-  // CAPTURE FROM CAMERA
-  // ----------------------------
 
   return (
     <div
@@ -63,9 +40,6 @@ const UploadModal: React.FC<UploadModalProps> = ({ onClose, onImageSelect }) => 
         <h2 className="text-xl font-semibold mb-4 text-center">
           Choose an Option
         </h2>
-
-        {/* Camera preview */}
-        <video ref={videoRef} autoPlay playsInline className="w-full rounded-lg mb-4" />
 
         <div className="flex flex-col gap-3">
 
