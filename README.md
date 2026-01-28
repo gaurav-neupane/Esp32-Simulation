@@ -24,7 +24,7 @@ npm install
 
 ### 3. Configure Backend API
 
-Open your configuration file (e.g., `src/config.js` or the ESP32 sketch) and update the fetch URL to point to your TinyML inference server:
+Update the fetch URL to point to your TinyML inference server:
 
 ```javascript
 // Replace with your actual backend IP or localhost
