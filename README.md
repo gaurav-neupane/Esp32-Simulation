@@ -1,4 +1,3 @@
-```markdown
 # 🧠 TinyML ESP32 Image Classification Simulation
 
 This project simulates an edge-to-cloud TinyML pipeline. The ESP32 stays in standby mode until triggered by a physical button. Once activated, it "captures" an image, sends it to a TinyML backend endpoint for inference, and displays the resulting classification on an I2C OLED screen.
