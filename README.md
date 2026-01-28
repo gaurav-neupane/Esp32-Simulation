@@ -11,7 +11,7 @@ Follow these steps to get the simulation and backend environment running locally
 ### 1. Clone the Repository
 ```bash
 git clone https://github.com/gaurav-neupane/Esp32-Simulation.git
-cd tinyml-esp32-sim
+cd Esp32-Simulation
 
 ```
 
